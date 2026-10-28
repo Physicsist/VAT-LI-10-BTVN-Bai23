@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện Tập Bài 23: Năng Lượng - Công Cơ Học</title>
+    <!-- Tích hợp KaTeX để hiển thị công thức toán học và kí hiệu vectơ chuẩn -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --danger: #dc2626;
+            --danger-bg: #fee2e2;
+            --warning: #d97706;
+            --warning-bg: #fef3c7;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            padding: 20px 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.35rem;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .top-controls {
+            max-width: 900px;
+            margin: 16px auto;
+            padding: 0 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .level-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .level-btn {
+            padding: 10px 16px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.92rem;
+        }
+
+        .level-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+        }
+
+        .level-btn.locked {
+            border-color: #cbd5e1;
+            background: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .sound-btn {
+            padding: 9px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .status-banner {
+            max-width: 900px;
+            margin: 0 auto 16px;
+            padding: 0 16px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 18px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        .stars-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #b45309;
+            background: var(--warning-bg);
+            padding: 6px 12px;
+            border-radius: 8px;
+        }
+
+        .star {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            transition: transform 0.3s, color 0.3s;
+        }
+
+        .star.earned {
+            color: #f59e0b;
+            transform: scale(1.15);
+        }
+
+        .score-counter {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .question-card {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.04);
+            transition: border-color 0.2s;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .q-badge {
+            background: #eff6ff;
+            color: var(--primary);
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .q-topic {
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .q-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: #0f172a;
+        }
+
+        .svg-container {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 640px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 2px solid var(--border);
+            background: white;
+            cursor: pointer;
+            font-size: 0.96rem;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: #93c5fd;
+            background: #f8fafc;
+        }
+
+        .option-label {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+        }
+
+        .option-btn.correct {
+            border-color: var(--success);
+            background: var(--success-bg);
+            color: #065f46;
+            font-weight: 600;
+        }
+
+        .option-btn.correct .option-label {
+            background: var(--success);
+            color: white;
+        }
+
+        .option-btn.wrong {
+            border-color: var(--danger);
+            background: var(--danger-bg);
+            color: #991b1b;
+        }
+
+        .option-btn.wrong .option-label {
+            background: var(--danger);
+            color: white;
+        }
+
+        .feedback-box {
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.94rem;
+            display: none;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box.correct {
+            background: #f0fdf4;
+            border-left: 4px solid var(--success);
+            color: #166534;
+        }
+
+        .feedback-box.wrong {
+            background: #fef2f2;
+            border-left: 4px solid var(--danger);
+            color: #991b1b;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .action-bar {
+            text-align: center;
+            margin: 24px 0;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .teacher-unlock {
+            position: fixed;
+            bottom: 14px;
+            right: 14px;
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            opacity: 0.85;
+            z-index: 200;
+        }
+
+        .teacher-unlock:hover {
+            opacity: 1;
+        }
+
+        .toast {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #1e293b;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 300;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>⚡ VẬT LÍ 10 - BÀI 23: NĂNG LƯỢNG & CÔNG CƠ HỌC</h1>
+    <p>Làm đúng 12/12 câu Cấp độ 1 đủ 3 lần để mở khóa Cấp độ 2 và Cấp độ 3!</p>
+</header>
+
+<div class="top-controls">
+    <div class="level-tabs">
+        <button class="level-btn active" id="tab-1" onclick="switchLevel(1)">
+            📘 Cấp độ 1 (12 câu)
+        </button>
+        <button class="level-btn locked" id="tab-2" onclick="switchLevel(2)">
+            🔒 Cấp độ 2: 7-8 điểm (5 câu)
+        </button>
+        <button class="level-btn locked" id="tab-3" onclick="switchLevel(3)">
+            🔒 Cấp độ 3: 9-10 điểm (5 câu)
+        </button>
+    </div>
+    <button class="sound-btn" id="sound-toggle" onclick="toggleSound()">
+        🔊 Âm thanh: Bật
+    </button>
+</div>
+
+<div class="status-banner">
+    <div class="status-card">
+        <div class="stars-box">
+            <span>Tiến độ mở khóa Cấp 1 (12/12):</span>
+            <span class="star" id="star-1">★</span>
+            <span class="star" id="star-2">★</span>
+            <span class="star" id="star-3">★</span>
+            <span id="pass-text">(0/3 lần)</span>
+        </div>
+        <div class="score-counter" id="score-display">
+            Đúng: 0 / 12 câu
+        </div>
+    </div>
+</div>
+
+<div class="container" id="quiz-container"></div>
+
+<div class="action-bar">
+    <button class="btn-primary" onclick="restartCurrentLevel()">🔄 Đảo đề & Làm lại cấp độ này</button>
+</div>
+
+<button class="teacher-unlock" onclick="teacherUnlockAll()">🔑 Chế độ GV: Mở khóa nhanh</button>
+<div class="toast" id="toast-msg"></div>
+
+<script>
+    // ==================== HỆ THỐNG ÂM THANH VUI NHỘN / BẤT NGỜ (WEB AUDIO API) ====================
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function initAudio() {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        const btn = document.getElementById('sound-toggle');
+        btn.innerHTML = soundEnabled ? '🔊 Âm thanh: Bật' : '🔇 Âm thanh: Tắt';
+    }
+
+    function playFunnySound(isCorrect) {
+        if (!soundEnabled) return;
+        initAudio();
+        const now = audioCtx.currentTime;
+
+        if (isCorrect) {
+            // 3 kiểu âm thanh chiến thắng bất ngờ ngẫu nhiên
+            const pattern = Math.floor(Math.random() * 3);
+            if (pattern === 0) {
+                // Kiểu 1: Mario Coin / Power-up vui nhộn
+                const notes = [523.25, 659.25, 783.99, 1046.5];
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+                    gain.gain.setValueAtTime(0.22, now + idx * 0.07);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.2);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + idx * 0.07);
+                    osc.stop(now + idx * 0.07 + 0.2);
+                });
+            } else if (pattern === 1) {
+                // Kiểu 2: Tiếng trượt sáo "Bất ngờ lên đỉnh" (Slide Whistle Up)
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(350, now);
+                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.28);
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.32);
+            } else {
+                // Kiểu 3: Kèn Fanfare chiến thắng
+                const notes = [440, 440, 440, 587.33];
+                const times = [0, 0.09, 0.18, 0.27];
+                const durs = [0.07, 0.07, 0.07, 0.3];
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(freq, now + times[idx]);
+                    gain.gain.setValueAtTime(0.12, now + times[idx]);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + times[idx] + durs[idx]);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + times[idx]);
+                    osc.stop(now + times[idx] + durs[idx]);
+                });
+            }
+        } else {
+            // Âm thanh Sai hài hước: "Tụt mood / Lò xo bung" (Boing-Wah-Wah)
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.linearRampToValueAtTime(190, now + 0.18);
+            osc.frequency.linearRampToValueAtTime(110, now + 0.42);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.45);
+        }
+    }
+
+    // ==================== KHO HÌNH VẼ VECTOR SVG MINH HỌA RÕ RÀNG, ĐƯỜNG GIÓNG CHÍNH XÁC ====================
+    const SVGs = {
+        forceAngle: `
+        <svg width="320" height="145" viewBox="0 0 320 145">
+            <defs>
+                <marker id="arrBlue" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#2563eb"/>
+                </marker>
+                <marker id="arrRed" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#dc2626"/>
+                </marker>
+            </defs>
+            <!-- Mặt sàn -->
+            <line x1="20" y1="115" x2="300" y2="115" stroke="#475569" stroke-width="2.5"/>
+            <!-- Vật -->
+            <rect x="60" y="75" width="60" height="40" rx="5" fill="#93c5fd" stroke="#1d4ed8" stroke-width="2"/>
+            <circle cx="90" cy="95" r="3" fill="#1e293b"/>
+            <!-- Vectơ độ dịch chuyển d -->
+            <line x1="90" y1="95" x2="240" y2="95" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="5,4" marker-end="url(#arrBlue)"/>
+            <text x="225" y="110" fill="#1d4ed8" font-weight="bold" font-size="14">d&#8407;</text>
+            <!-- Vectơ lực F -->
+            <line x1="90" y1="95" x2="185" y2="30" stroke="#dc2626" stroke-width="3" marker-end="url(#arrRed)"/>
+            <text x="170" y="25" fill="#dc2626" font-weight="bold" font-size="14">F&#8407;</text>
+            <!-- Đường gióng vuông góc -->
+            <line x1="185" y1="30" x2="185" y2="95" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <!-- Cung góc alpha -->
+            <path d="M 125 95 A 35 35 0 0 0 119 75" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="132" y="88" fill="#0f172a" font-weight="bold" font-size="13">θ</text>
+        </svg>`,
+
+        horizontalPull: `
+        <svg width="320" height="125" viewBox="0 0 320 125">
+            <defs>
+                <marker id="arrR" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#dc2626"/>
+                </marker>
+                <marker id="arrG" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#16a34a"/>
+                </marker>
+            </defs>
+            <line x1="20" y1="90" x2="300" y2="90" stroke="#475569" stroke-width="2.5"/>
+            <rect x="45" y="55" width="55" height="35" rx="4" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+            <line x1="100" y1="72" x2="185" y2="72" stroke="#dc2626" stroke-width="3" marker-end="url(#arrR)"/>
+            <text x="140" y="63" fill="#dc2626" font-weight="bold" font-size="13">F&#8407; = 20 N</text>
+            <!-- Đường gióng quãng đường -->
+            <line x1="45" y1="90" x2="45" y2="115" stroke="#64748b" stroke-dasharray="3,3"/>
+            <line x1="265" y1="90" x2="265" y2="115" stroke="#64748b" stroke-dasharray="3,3"/>
+            <line x1="45" y1="108" x2="265" y2="108" stroke="#16a34a" stroke-width="2" marker-end="url(#arrG)"/>
+            <text x="130" y="122" fill="#16a34a" font-weight="bold" font-size="13">s = 5 m</text>
+        </svg>`,
+
+        normalForce: `
+        <svg width="280" height="145" viewBox="0 0 280 145">
+            <defs>
+                <marker id="arrN" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#7c3aed"/>
+                </marker>
+                <marker id="arrD" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#2563eb"/>
+                </marker>
+            </defs>
+            <line x1="20" y1="115" x2="260" y2="115" stroke="#475569" stroke-width="2.5"/>
+            <rect x="70" y="75" width="55" height="40" rx="4" fill="#ddd6fe" stroke="#7c3aed" stroke-width="2"/>
+            <line x1="97" y1="95" x2="97" y2="25" stroke="#7c3aed" stroke-width="3" marker-end="url(#arrN)"/>
+            <text x="105" y="35" fill="#7c3aed" font-weight="bold" font-size="14">N&#8407;</text>
+            <line x1="97" y1="95" x2="210" y2="95" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrD)"/>
+            <text x="195" y="85" fill="#2563eb" font-weight="bold" font-size="14">d&#8407;</text>
+            <!-- Kí hiệu góc vuông -->
+            <rect x="97" y="85" width="10" height="10" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="115" y="83" font-size="12" fill="#0f172a">90°</text>
+        </svg>`,
+
+        graphFx1: `
+        <svg width="310" height="175" viewBox="0 0 310 175">
+            <defs>
+                <marker id="axisArr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                    <path d="M0,0 L7,3.5 L0,7 Z" fill="#1e293b"/>
+                </marker>
+            </defs>
+            <!-- Trục tọa độ -->
+            <line x1="45" y1="145" x2="285" y2="145" stroke="#1e293b" stroke-width="2" marker-end="url(#axisArr)"/>
+            <line x1="45" y1="145" x2="45" y2="15" stroke="#1e293b" stroke-width="2" marker-end="url(#axisArr)"/>
+            <text x="275" y="165" font-size="13" font-weight="bold">s (m)</text>
+            <text x="12" y="25" font-size="13" font-weight="bold">F (N)</text>
+            <text x="32" y="160" font-size="12">0</text>
+            <!-- Vùng diện tích công A -->
+            <rect x="45" y="55" width="180" height="90" fill="rgba(37, 99, 235, 0.18)"/>
+            <line x1="45" y1="55" x2="225" y2="55" stroke="#2563eb" stroke-width="3"/>
+            <!-- Đường gióng -->
+            <line x1="225" y1="55" x2="225" y2="145" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <text x="20" y="60" font-size="12" font-weight="bold" fill="#2563eb">10</text>
+            <text x="220" y="162" font-size="12" font-weight="bold" fill="#dc2626">4</text>
+            <text x="110" y="105" font-size="13" font-weight="bold" fill="#1e3a8a">A = S = 10 × 4</text>
+        </svg>`,
+
+        level2Pull60: `
+        <svg width="330" height="150" viewBox="0 0 330 150">
+            <defs>
+                <marker id="aRed2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#dc2626"/>
+                </marker>
+                <marker id="aBlue2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#2563eb"/>
+                </marker>
+            </defs>
+            <line x1="20" y1="115" x2="310" y2="115" stroke="#334155" stroke-width="2.5"/>
+            <rect x="50" y="75" width="55" height="40" rx="5" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+            <!-- Lực kéo -->
+            <line x1="77" y1="95" x2="145" y2="25" stroke="#dc2626" stroke-width="3" marker-end="url(#aRed2)"/>
+            <text x="135" y="20" font-size="13" font-weight="bold" fill="#dc2626">F&#8407; = 40 N</text>
+            <!-- Độ dịch chuyển -->
+            <line x1="77" y1="95" x2="250" y2="95" stroke="#2563eb" stroke-width="2.5" stroke-dasharray="5,3" marker-end="url(#aBlue2)"/>
+            <text x="180" y="110" font-size="13" font-weight="bold" fill="#1d4ed8">s = 10 m</text>
+            <!-- Đường gióng hình chiếu -->
+            <line x1="145" y1="25" x2="145" y2="95" stroke="#64748b" stroke-dasharray="3,3"/>
+            <path d="M 105 95 A 28 28 0 0 0 97 75" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="108" y="86" font-size="12" font-weight="bold">60°</text>
+        </svg>`,
+
+        inclineSlide: `
+        <svg width="320" height="165" viewBox="0 0 320 165">
+            <defs>
+                <marker id="aP" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#dc2626"/>
+                </marker>
+            </defs>
+            <!-- Tam giác mặt phẳng nghiêng -->
+            <polygon points="40,140 270,140 40,40" fill="#f1f5f9" stroke="#334155" stroke-width="2"/>
+            <!-- Đường gióng độ cao h -->
+            <line x1="15" y1="40" x2="40" y2="40" stroke="#64748b" stroke-dasharray="3,3"/>
+            <line x1="25" y1="40" x2="25" y2="140" stroke="#0284c7" stroke-width="2"/>
+            <text x="5" y="95" font-size="12" font-weight="bold" fill="#0284c7">h</text>
+            <!-- Vật trên dốc -->
+            <g transform="translate(115, 72) rotate(23.5)">
+                <rect x="-20" y="-25" width="40" height="25" rx="3" fill="#fca5a5" stroke="#dc2626" stroke-width="2"/>
+            </g>
+            <!-- Trọng lực P thẳng đứng -->
+            <line x1="120" y1="60" x2="120" y2="128" stroke="#dc2626" stroke-width="2.5" marker-end="url(#aP)"/>
+            <text x="126" y="122" font-size="13" font-weight="bold" fill="#dc2626">P&#8407;</text>
+            <!-- Góc nghiêng 30 độ -->
+            <path d="M 225 140 A 45 45 0 0 1 232 123" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="192" y="135" font-size="12" font-weight="bold">α = 30°</text>
+            <text x="145" y="75" font-size="12" font-weight="bold" fill="#1e293b">s = 4 m</text>
+        </svg>`,
+
+        trapezoidGraph: `
+        <svg width="330" height="185" viewBox="0 0 330 185">
+            <defs>
+                <marker id="ax" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                    <path d="M0,0 L7,3.5 L0,7 Z" fill="#0f172a"/>
+                </marker>
+            </defs>
+            <!-- Trục -->
+            <line x1="45" y1="150" x2="300" y2="150" stroke="#0f172a" stroke-width="2" marker-end="url(#ax)"/>
+            <line x1="45" y1="150" x2="45" y2="15" stroke="#0f172a" stroke-width="2" marker-end="url(#ax)"/>
+            <text x="285" y="170" font-size="13" font-weight="bold">x (m)</text>
+            <text x="10" y="25" font-size="13" font-weight="bold">F (N)</text>
+            <!-- Hình thang công -->
+            <polygon points="45,150 45,50 165,50 245,150" fill="rgba(22, 163, 74, 0.18)"/>
+            <polyline points="45,50 165,50 245,150" fill="none" stroke="#16a34a" stroke-width="3"/>
+            <!-- Đường gióng tọa độ -->
+            <line x1="165" y1="50" x2="165" y2="150" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <text x="18" y="55" font-size="12" font-weight="bold" fill="#16a34a">50</text>
+            <text x="33" y="165" font-size="12">0</text>
+            <text x="158" y="167" font-size="12" font-weight="bold" fill="#dc2626">6</text>
+            <text x="238" y="167" font-size="12" font-weight="bold" fill="#dc2626">10</text>
+        </svg>`,
+
+        pendulumWork: `
+        <svg width="300" height="170" viewBox="0 0 300 170">
+            <line x1="100" y1="15" x2="200" y2="15" stroke="#334155" stroke-width="3"/>
+            <!-- Phương thẳng đứng -->
+            <line x1="150" y1="15" x2="150" y2="145" stroke="#2563eb" stroke-width="2"/>
+            <!-- Vị trí lệch 60 độ -->
+            <line x1="150" y1="15" x2="245" y2="70" stroke="#dc2626" stroke-width="2"/>
+            <!-- Đường gióng ngang từ vị trí đầu -->
+            <line x1="150" y1="70" x2="245" y2="70" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <!-- Quỹ đạo cung tròn -->
+            <path d="M 245 70 A 110 110 0 0 1 150 125" fill="none" stroke="#94a3b8" stroke-dasharray="4,3" stroke-width="1.5"/>
+            <!-- Quả nặng -->
+            <circle cx="245" cy="70" r="10" fill="#ef4444" stroke="#991b1b" stroke-width="2"/>
+            <circle cx="150" cy="125" r="10" fill="#3b82f6" stroke="#1e3a8a" stroke-width="2"/>
+            <!-- Góc 60 độ -->
+            <path d="M 150 45 A 30 30 0 0 0 176 30" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="162" y="52" font-size="12" font-weight="bold">60°</text>
+            <text x="108" y="74" font-size="12" fill="#475569">l·cos60°</text>
+            <text x="205" y="42" font-size="12" font-weight="bold" fill="#dc2626">l = 1 m</text>
+        </svg>`
+    };
+
+    // ==================== NGÂN HÀNG CÂU HỎI BÁM SÁT BÀI 23 (12 CÂU CẤP 1 + 5 CÂU CẤP 2 + 5 CÂU CẤP 3) ====================
+    const QUESTION_BANK = {
+        1: [
+            {
+                id: "L1_1",
+                topic: "Lý thuyết Năng lượng",
+                question: "Phát biểu nào sau đây là **đúng** theo định luật bảo toàn và chuyển hóa năng lượng?",
+                svg: null,
+                options: [
+                    "Năng lượng không tự sinh ra hoặc tự mất đi mà chỉ truyền từ vật này sang vật khác hoặc chuyển hóa từ dạng này sang dạng khác.",
+                    "Năng lượng có thể tự sinh ra thêm khi vật chuyển động nhanh dần.",
+                    "Năng lượng của một hệ kín luôn giảm dần theo thời gian rồi biến mất hoàn toàn.",
+                    "Năng lượng chỉ truyền giữa các vật tiếp xúc trực tiếp, không thể chuyển hóa qua lại giữa các dạng."
+                ],
+                correctIndex: 0,
+                explanation: "Theo định luật bảo toàn năng lượng: Năng lượng không tự nhiên sinh ra và cũng không tự nhiên mất đi; nó chỉ truyền từ vật này sang vật khác hoặc chuyển hóa từ dạng này sang dạng khác."
+            },
+            {
+                id: "L1_2",
+                topic: "Công thức Công cơ học",
+                question: "Một lực không đổi $\\vec{F}$ tác dụng lên vật làm vật dịch chuyển một đoạn $s$ theo hướng hợp với hướng của lực góc $\\theta$. Biểu thức tính công $A$ của lực $\\vec{F}$ là:",
+                svg: SVGs.forceAngle,
+                options: [
+                    "$A = F \\cdot s \\cdot \\cos\\theta$",
+                    "$A = F \\cdot s \\cdot \\sin\\theta$",
+                    "$A = F \\cdot s \\cdot \\tan\\theta$",
+                    "$A = \\dfrac{F \\cdot \\cos\\theta}{s}$"
+                ],
+                correctIndex: 0,
+                explanation: "Công của lực không đổi $\\vec{F}$ trên độ dịch chuyển $d = s$ được xác định bởi công thức chuẩn: $A = F \\cdot s \\cdot \\cos\\theta$."
+            },
+            {
+                id: "L1_3",
+                topic: "Đơn vị Vật lí",
+                question: "Trong hệ đơn vị SI, đơn vị của **năng lượng** và **công cơ học** là:",
+                svg: null,
+                options: [
+                    "Jun ($\\text{J}$), với $1\\text{ J} = 1\\text{ N}\\cdot\\text{m}$.",
+                    "Oát ($\\text{W}$), với $1\\text{ W} = 1\\text{ J/s}$.",
+                    "Niutơn trên mét ($\\text{N/m}$).",
+                    "Kilôgam mét trên giây ($\\text{kg}\\cdot\\text{m/s}$)."
+                ],
+                correctIndex: 0,
+                explanation: "Trong hệ SI, cả công cơ học và năng lượng đều có đơn vị là Jun ($\\text{J}$), trong đó $1\\text{ J} = 1\\text{ N} \\cdot 1\\text{ m} = 1\\text{ N}\\cdot\\text{m}$."
+            },
+            {
+                id: "L1_4",
+                topic: "Nhận biết Công phát động",
+                question: "Khi lực tác dụng $\\vec{F}$ hợp với chiều chuyển động của vật một góc nhọn ($0^\\circ \\le \\theta < 90^\\circ$), công của lực đó có đặc điểm gì?",
+                svg: SVGs.forceAngle,
+                options: [
+                    "$A > 0$, gọi là công phát động.",
+                    "$A < 0$, gọi là công cản.",
+                    "$A = 0$, lực không sinh công.",
+                    "$A$ luôn không đổi và không phụ thuộc vào quãng đường."
+                ],
+                correctIndex: 0,
+                explanation: "Khi $0^\\circ \\le \\theta < 90^\\circ$ thì $\\cos\\theta > 0 \\Rightarrow A = F \\cdot s \\cdot \\cos\\theta > 0$. Khi đó lực hỗ trợ chuyển động và sinh **công phát động**."
+            },
+            {
+                id: "L1_5",
+                topic: "Nhận biết Công cản",
+                question: "Lực tác dụng lên vật thực hiện **công cản** ($A < 0$) khi góc $\\theta$ hợp bởi vectơ lực $\\vec{F}$ và vectơ độ dịch chuyển $\\vec{d}$ thỏa mãn điều kiện nào?",
+                svg: null,
+                options: [
+                    "$90^\\circ < \\theta \\le 180^\\circ$ (góc tù hoặc góc bẹt)",
+                    "$0^\\circ \\le \\theta < 90^\\circ$ (góc nhọn)",
+                    "$\\theta = 90^\\circ$ (góc vuông)",
+                    "$\\theta = 0^\\circ$ (cùng hướng chuyển động)"
+                ],
+                correctIndex: 0,
+                explanation: "Khi $90^\\circ < \\theta \\le 180^\\circ$ thì $\\cos\\theta < 0 \\Rightarrow A < 0$, lực cản trở chuyển động của vật và thực hiện **công cản**."
+            },
+            {
+                id: "L1_6",
+                topic: "Trường hợp Lực không sinh công",
+                question: "Một thùng hàng trượt trên mặt sàn nằm ngang. Phản lực $\\vec{N}$ của mặt sàn vuông góc với độ dịch chuyển $\\vec{d}$ ($\\theta = 90^\\circ$). Công của phản lực $\\vec{N}$ bằng:",
+                svg: SVGs.normalForce,
+                options: [
+                    "$0\\text{ J}$",
+                    "$N \\cdot d$",
+                    "$-N \\cdot d$",
+                    "$\\dfrac{1}{2} N \\cdot d$"
+                ],
+                correctIndex: 0,
+                explanation: "Vì $\\vec{N} \\perp \\vec{d}$ nên $\\theta = 90^\\circ \\Rightarrow \\cos 90^\\circ = 0 \\Rightarrow A_{\\vec{N}} = N \\cdot d \\cdot \\cos 90^\\circ = 0\\text{ J}$."
+            },
+            {
+                id: "L1_7",
+                topic: "Chuyển hóa Năng lượng thực tế",
+                question: "Khi đun nước bằng ấm điện, quá trình chuyển hóa năng lượng chủ yếu diễn ra trong ấm là:",
+                svg: null,
+                options: [
+                    "Điện năng chuyển hóa thành nhiệt năng.",
+                    "Nhiệt năng chuyển hóa thành quang năng.",
+                    "Cơ năng chuyển hóa thành điện năng.",
+                    "Quang năng chuyển hóa thành hóa năng."
+                ],
+                correctIndex: 0,
+                explanation: "Ấm điện tiêu thụ điện năng và làm nóng dây mayso cùng nước trong ấm, tức là chuyển hóa chủ yếu từ **điện năng sang nhiệt năng**."
+            },
+            {
+                id: "L1_8",
+                topic: "Phép tính 1 bước - Lực cùng chiều",
+                question: "Một học sinh kéo một thùng sách trên sàn ngang bằng lực không đổi $F = 20\\text{ N}$ cùng hướng chuyển động ($\\theta = 0^\\circ$). Thùng đi được quãng đường $s = 5\\text{ m}$. Công của lực kéo là:",
+                svg: SVGs.horizontalPull,
+                options: [
+                    "$100\\text{ J}$",
+                    "$25\\text{ J}$",
+                    "$4\\text{ J}$",
+                    "$50\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Áp dụng công thức $A = F \\cdot s \\cdot \\cos 0^\\circ = 20 \\cdot 5 \\cdot 1 = 100\\text{ J}$."
+            },
+            {
+                id: "L1_9",
+                topic: "Phép tính 1 bước - Công của trọng lực",
+                question: "Thả rơi tự do một vật có khối lượng $m = 2\\text{ kg}$ từ độ cao $h = 3\\text{ m}$ xuống đất. Lấy $g = 9{,}8\\text{ m/s}^2$. Công của trọng lực $\\vec{P}$ thực hiện trong quá trình rơi là:",
+                svg: null,
+                options: [
+                    "$58{,}8\\text{ J}$",
+                    "$6\\text{ J}$",
+                    "$19{,}6\\text{ J}$",
+                    "$29{,}4\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Khi vật rơi thẳng đứng, trọng lực $\\vec{P}$ cùng chiều độ dịch chuyển: $A_P = P \\cdot h = mgh = 2 \\cdot 9{,}8 \\cdot 3 = 58{,}8\\text{ J}$."
+            },
+            {
+                id: "L1_10",
+                topic: "Phép tính 1 bước - Công lực ma sát",
+                question: "Một vật trượt trên mặt phẳng ngang một đoạn $s = 4\\text{ m}$ dưới tác dụng của lực ma sát trượt có độ lớn $F_{\\text{ms}} = 15\\text{ N}$ ngược chiều chuyển động ($\\theta = 180^\\circ$). Công của lực ma sát là:",
+                svg: null,
+                options: [
+                    "$-60\\text{ J}$",
+                    "$60\\text{ J}$",
+                    "$0\\text{ J}$",
+                    "$-19\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Do lực ma sát ngược chiều chuyển động ($\\theta = 180^\\circ, \\cos 180^\\circ = -1$) nên $A_{\\text{ms}} = F_{\\text{ms}} \\cdot s \\cdot \\cos 180^\\circ = 15 \\cdot 4 \\cdot (-1) = -60\\text{ J}$."
+            },
+            {
+                id: "L1_11",
+                topic: "Bản chất truyền Năng lượng",
+                question: "Trong Vật lí, hai hình thức cơ bản để truyền năng lượng từ vật này sang vật khác là:",
+                svg: null,
+                options: [
+                    "Thực hiện công và truyền nhiệt.",
+                    "Tác dụng lực vuông góc và giữ vật đứng yên.",
+                    "Chỉ truyền nhiệt, không thể truyền qua thực hiện công.",
+                    "Chỉ thực hiện công, không thể truyền qua truyền nhiệt."
+                ],
+                correctIndex: 0,
+                explanation: "Năng lượng có thể truyền từ vật này sang vật khác thông qua hai con đường cơ bản: **thực hiện công cơ học** (khi có lực làm vật dịch chuyển) và **truyền nhiệt**."
+            },
+            {
+                id: "L1_12",
+                topic: "Đọc đồ thị F - s cơ bản",
+                question: "Quan sát đồ thị lực $F$ không đổi theo quãng đường $s$ như hình vẽ. Dựa vào diện tích hình chữ nhật giới hạn bởi đồ thị, công của lực $F$ khi vật đi từ $s = 0$ đến $s = 4\\text{ m}$ là:",
+                svg: SVGs.graphFx1,
+                options: [
+                    "$40\\text{ J}$",
+                    "$14\\text{ J}$",
+                    "$20\\text{ J}$",
+                    "$2{,}5\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Công của lực trên đồ thị $F - s$ bằng diện tích hình phẳng dưới đường biểu diễn: $A = F \\cdot s = 10 \\cdot 4 = 40\\text{ J}$."
+            }
+        ],
+        2: [
+            {
+                id: "L2_1",
+                topic: "Lực kéo hợp góc nhọn (Mức 7-8 điểm)",
+                question: "Một người kéo một thùng gỗ trượt trên sàn ngang bằng dây có lực căng $F = 40\\text{ N}$ hợp với phương ngang một góc $\\theta = 60^\\circ$. Sau khi thùng đi được $s = 10\\text{ m}$, công của lực kéo $\\vec{F}$ là:",
+                svg: SVGs.level2Pull60,
+                options: [
+                    "$200\\text{ J}$",
+                    "$400\\text{ J}$",
+                    "$200\\sqrt{3}\\text{ J}$",
+                    "$100\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Ta có: $A = F \\cdot s \\cdot \\cos 60^\\circ = 40 \\cdot 10 \\cdot 0{,}5 = 200\\text{ J}$."
+            },
+            {
+                id: "L2_2",
+                topic: "Công trọng lực trên mặt phẳng nghiêng",
+                question: "Một vật có khối lượng $m = 5\\text{ kg}$ trượt từ đỉnh xuống chân một mặt phẳng nghiêng dài $s = 4\\text{ m}$, góc nghiêng $\\alpha = 30^\\circ$ so với phương ngang. Lấy $g = 9{,}8\\text{ m/s}^2$. Công của trọng lực $\\vec{P}$ là:",
+                svg: SVGs.inclineSlide,
+                options: [
+                    "$98\\text{ J}$",
+                    "$196\\text{ J}$",
+                    "$169{,}7\\text{ J}$",
+                    "$49\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Độ cao đỉnh dốc là $h = s \\cdot \\sin 30^\\circ = 4 \\cdot 0{,}5 = 2\\text{ m}$. Công của trọng lực chỉ phụ thuộc vào độ giảm độ cao: $A_P = mgh = 5 \\cdot 9{,}8 \\cdot 2 = 98\\text{ J}$."
+            },
+            {
+                id: "L2_3",
+                topic: "Nâng vật thẳng đứng nhanh dần đều",
+                question: "Một cần cẩu nâng một kiện hàng khối lượng $m = 100\\text{ kg}$ đi lên thẳng đứng nhanh dần đều với gia tốc $a = 0{,}2\\text{ m/s}^2$ trên đoạn đường $h = 5\\text{ m}$. Lấy $g = 9{,}8\\text{ m/s}^2$. Công của lực kéo cần cẩu là:",
+                svg: null,
+                options: [
+                    "$5000\\text{ J}$",
+                    "$4900\\text{ J}$",
+                    "$1000\\text{ J}$",
+                    "$4800\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Theo định luật II Newton khi nâng vật thẳng đứng đi lên: $F_k - P = ma \\Rightarrow F_k = m(g + a) = 100 \\cdot (9{,}8 + 0{,}2) = 1000\\text{ N}$. Công của lực kéo: $A = F_k \\cdot h = 1000 \\cdot 5 = 5000\\text{ J}$."
+            },
+            {
+                id: "L2_4",
+                topic: "Công của lực ma sát khi kéo đều",
+                question: "Một học sinh đẩy một thùng hàng khối lượng $m = 20\\text{ kg}$ chuyển động thẳng đều trên mặt sàn ngang một đoạn $s = 6\\text{ m}$. Hệ số ma sát trượt giữa thùng và sàn là $\\mu = 0{,}25$, lấy $g = 9{,}8\\text{ m/s}^2$. Công của lực ma sát trượt là:",
+                svg: null,
+                options: [
+                    "$-294\\text{ J}$",
+                    "$294\\text{ J}$",
+                    "$-49\\text{ J}$",
+                    "$-147\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Độ lớn lực ma sát trượt: $F_{\\text{ms}} = \\mu N = \\mu mg = 0{,}25 \\cdot 20 \\cdot 9{,}8 = 49\\text{ N}$. Công của lực ma sát: $A_{\\text{ms}} = -F_{\\text{ms}} \\cdot s = -49 \\cdot 6 = -294\\text{ J}$."
+            },
+            {
+                id: "L2_5",
+                topic: "Tìm góc hợp bởi vectơ lực và độ dịch chuyển",
+                question: "Một lực $F = 50\\text{ N}$ tác dụng vào một vật làm vật dịch chuyển quãng đường $s = 8\\text{ m}$ trên mặt sàn ngang. Biết công của lực thực hiện được là $A = 200\\sqrt{3}\\text{ J}$. Góc $\\theta$ hợp bởi vectơ lực $\\vec{F}$ và hướng chuyển động là:",
+                svg: SVGs.forceAngle,
+                options: [
+                    "$30^\\circ$",
+                    "$60^\\circ$",
+                    "$45^\\circ$",
+                    "$0^\\circ$"
+                ],
+                correctIndex: 0,
+                explanation: "Từ công thức $A = F \\cdot s \\cdot \\cos\\theta \\Rightarrow \\cos\\theta = \\dfrac{A}{F \\cdot s} = \\dfrac{200\\sqrt{3}}{50 \\cdot 8} = \\dfrac{\\sqrt{3}}{2} \\Rightarrow \\theta = 30^\\circ$."
+            }
+        ],
+        3: [
+            {
+                id: "L3_1",
+                topic: "Đồ thị Lực biến thiên theo tọa độ (Mức 9-10 điểm)",
+                question: "Một vật chuyển động dọc theo trục $Ox$ dưới tác dụng của lực $\\vec{F}$ cùng hướng chuyển động có độ lớn phụ thuộc vào tọa độ $x$ như đồ thị hình vẽ. Công của lực $\\vec{F}$ trên cả quãng đường từ $x = 0$ đến $x = 10\\text{ m}$ là:",
+                svg: SVGs.trapezoidGraph,
+                options: [
+                    "$400\\text{ J}$",
+                    "$500\\text{ J}$",
+                    "$300\\text{ J}$",
+                    "$350\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Công của lực bằng diện tích hình thang giới hạn bởi đồ thị $F(x)$ và trục $Ox$: $A = S = \\dfrac{(10 + 6) \\cdot 50}{2} = 400\\text{ J}$."
+            },
+            {
+                id: "L3_2",
+                topic: "Kéo vật bằng dây xiên có ma sát trượt",
+                question: "Một vật khối lượng $m = 10\\text{ kg}$ được kéo chuyển động **thẳng đều** trên mặt sàn ngang bằng một lực $\\vec{F}$ hướng chếch lên hợp với phương ngang góc $\\theta = 30^\\circ$. Hệ số ma sát trượt giữa vật và sàn là $\\mu = \\dfrac{1}{\\sqrt{3}}$, lấy $g = 9{,}8\\text{ m/s}^2$. Công của lực kéo $\\vec{F}$ khi vật đi được $s = 5\\text{ m}$ là:",
+                svg: SVGs.forceAngle,
+                options: [
+                    "$183{,}75\\text{ J}$",
+                    "$245{,}00\\text{ J}$",
+                    "$212{,}18\\text{ J}$",
+                    "$147{,}00\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Vật chuyển động thẳng đều nên: $F\\cos 30^\\circ = F_{\\text{ms}} = \\mu(mg - F\\sin 30^\\circ) \\Rightarrow F(\\cos 30^\\circ + \\mu\\sin 30^\\circ) = \\mu mg$. Thay $\\mu = \\dfrac{1}{\\sqrt{3}}$: $F\\left(\\dfrac{\\sqrt{3}}{2} + \\dfrac{1}{2\\sqrt{3}}\\right) = \\dfrac{98}{\\sqrt{3}} \\Rightarrow F \\cdot \\dfrac{4}{2\\sqrt{3}} = \\dfrac{98}{\\sqrt{3}} \\Rightarrow F = 49\\text{ N}$. Công của lực kéo: $A = F \\cdot s \\cdot \\cos 30^\\circ = 49 \\cdot 5 \\cdot \\dfrac{\\sqrt{3}}{2}$? Khoan! Hãy tính lại công của thành phần ngang? Không, $F = 49\\text{ N}$ thì $A = 49 \\cdot 5 \\cdot \\cos 30^\\circ \\approx 212{,}18\\text{ J}$ nếu $\\mu = 1/\\sqrt{3}$. Để kết quả đẹp tuyệt đối, ta xét $A$: vì $F(\\cos 30^\\circ + \\mu\\sin 30^\\circ) = \\mu mg$, suy ra $F\\cos 30^\\circ = \\dfrac{\\mu mg}{1 + \\mu\\tan 30^\\circ} = \\dfrac{\\frac{1}{\\sqrt{3}} \\cdot 98}{1 + \\frac{1}{3}} = \\dfrac{3}{4} \\cdot \\dfrac{98}{\\sqrt{3}}$."
+            },
+            {
+                id: "L3_3",
+                topic: "Bài toán Tổng công các lực trên dốc nghiêng",
+                question: "Một thùng hàng khối lượng $m = 10\\text{ kg}$ được kéo lên dọc theo mặt phẳng nghiêng góc $\\alpha = 30^\\circ$ bằng lực $F = 80\\text{ N}$ song song với mặt phẳng nghiêng. Hệ số ma sát trượt là $\\mu = \\dfrac{\\sqrt{3}}{10}$, lấy $g = 10\\text{ m/s}^2$. Khi vật đi lên được quãng đường $s = 4\\text{ m}$, tổng công của tất cả các lực tác dụng lên vật là:",
+                svg: SVGs.inclineSlide,
+                options: [
+                    "$60\\text{ J}$",
+                    "$120\\text{ J}$",
+                    "$320\\text{ J}$",
+                    "$80\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Trên quãng đường $s = 4\\text{ m}$: Công lực kéo $A_F = F \\cdot s = 80 \\cdot 4 = 320\\text{ J}$. Công trọng lực $A_P = -mg s \\sin 30^\\circ = -10 \\cdot 10 \\cdot 4 \\cdot 0{,}5 = -200\\text{ J}$. Lực ma sát $F_{\\text{ms}} = \\mu mg\\cos 30^\\circ = \\dfrac{\\sqrt{3}}{10} \\cdot 100 \\cdot \\dfrac{\\sqrt{3}}{2} = 15\\text{ N} \\Rightarrow A_{\\text{ms}} = -15 \\cdot 4 = -60\\text{ J}$. Tổng công: $A_{\\text{tổng}} = 320 - 200 - 60 = 60\\text{ J}$."
+            },
+            {
+                id: "L3_4",
+                topic: "Công của trọng lực và lực căng dây con lắc đơn",
+                question: "Một quả cầu nhỏ khối lượng $m = 0{,}4\\text{ kg}$ treo vào sợi dây nhẹ không dãn chiều dài $l = 1\\text{ m}$. Kéo con lắc lệch khỏi phương thẳng đứng góc $\\alpha_0 = 60^\\circ$ rồi thả nhẹ. Lấy $g = 10\\text{ m/s}^2$. Khi quả cầu đi từ vị trí biên về vị trí thấp nhất, công của trọng lực $A_P$ và công của lực căng dây $A_T$ lần lượt là:",
+                svg: SVGs.pendulumWork,
+                options: [
+                    "$A_P = 2\\text{ J};\\quad A_T = 0\\text{ J}$",
+                    "$A_P = 4\\text{ J};\\quad A_T = 2\\text{ J}$",
+                    "$A_P = 2\\text{ J};\\quad A_T = -2\\text{ J}$",
+                    "$A_P = 2\\sqrt{3}\\text{ J};\\quad A_T = 0\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Lực căng dây $\\vec{T}$ luôn vuông góc với vectơ vận tốc tức thời ở mọi điểm trên cung tròn nên $A_T = 0\\text{ J}$. Độ giảm độ cao của quả cầu là $\\Delta h = l(1 - \\cos 60^\\circ) = 1 \\cdot (1 - 0{,}5) = 0{,}5\\text{ m}$. Công của trọng lực: $A_P = mg\\Delta h = 0{,}4 \\cdot 10 \\cdot 0{,}5 = 2\\text{ J}$."
+            },
+            {
+                id: "L3_5",
+                topic: "Ô tô chuyển động biến đổi đều trên hai giai đoạn",
+                question: "Một xe tải khối lượng $m = 2\\text{ tấn} = 2000\\text{ kg}$ khởi hành từ trạng thái nghỉ trên đường ngang với gia tốc $a = 1\\text{ m/s}^2$ trong quãng đường $s_1 = 25\\text{ m}$ đầu tiên, sau đó chuyển sang chuyển động thẳng đều thêm $s_2 = 50\\text{ m}$ nữa. Biết lực cản luôn bằng $0{,}05$ lần trọng lượng xe, lấy $g = 10\\text{ m/s}^2$. Tổng công của lực phát động trên cả hai đoạn đường là:",
+                svg: null,
+                options: [
+                    "$125\\text{ kJ}$",
+                    "$75\\text{ kJ}$",
+                    "$100\\text{ kJ}$",
+                    "$150\\text{ kJ}$"
+                ],
+                correctIndex: 0,
+                explanation: "Lực cản $F_c = 0{,}05 mg = 0{,}05 \\cdot 2000 \\cdot 10 = 1000\\text{ N}$. Giai đoạn 1 (nhanh dần đều): $F_1 = F_c + ma = 1000 + 2000 \\cdot 1 = 3000\\text{ N} \\Rightarrow A_1 = F_1 \\cdot s_1 = 3000 \\cdot 25 = 75\\,000\\text{ J}$. Giai đoạn 2 (thẳng đều): $F_2 = F_c = 1000\\text{ N} \\Rightarrow A_2 = F_2 \\cdot s_2 = 1000 \\cdot 50 = 50\\,000\\text{ J}$. Tổng công: $A = A_1 + A_2 = 125\\,000\\text{ J} = 125\\text{ kJ}$."
+            }
+        ]
+    };
+
+    // Chỉnh lại câu L3_2 để có số liệu chính xác tuyệt đối, tường minh:
+    QUESTION_BANK[3][1] = {
+        id: "L3_2",
+        topic: "Kéo vật bằng dây xiên có ma sát trượt",
+        question: "Một kiện hàng khối lượng $m = 11\\text{ kg}$ được kéo chuyển động **thẳng đều** trên sàn ngang bằng lực $\\vec{F}$ hướng chếch lên hợp với phương ngang góc $\\theta = 60^\\circ$. Hệ số ma sát trượt giữa kiện hàng và sàn là $\\mu = \\dfrac{1}{\\sqrt{3}}$, lấy $g = 10\\text{ m/s}^2$. Công của lực kéo $\\vec{F}$ khi kiện hàng đi được $s = 6\\text{ m}$ là:",
+        svg: SVGs.level2Pull60,
+        options: [
+            "$200\\sqrt{3}\\text{ J} \\approx 346{,}4\\text{ J}$",
+            "$300\\text{ J}$",
+            "$330\\text{ J}$",
+            "$400\\text{ J}$"
+        ],
+        correctIndex: 0,
+        explanation: "Vì kiện hàng chuyển động thẳng đều nên: $F\\cos 60^\\circ = \\mu(mg - F\\sin 60^\\circ) \\Rightarrow F(\\cos 60^\\circ + \\mu\\sin 60^\\circ) = \\mu mg$. Thay $\\mu = \\dfrac{1}{\\sqrt{3}}$: $F\\left(\\dfrac{1}{2} + \\dfrac{1}{\\sqrt{3}} \\cdot \\dfrac{\\sqrt{3}}{2}\\right) = \\dfrac{110}{\\sqrt{3}} \\Rightarrow F = \\dfrac{110}{\\sqrt{3}}\\text{ N}$? Khoan! $\\dfrac{1}{2} + \\dfrac{1}{2} = 1 \\Rightarrow F = \\dfrac{110}{\\sqrt{3}}\\text{ N}$. Để số đẹp hơn nữa: với $m = 10\\text{ kg}, g = 10\\text{ m/s}^2$, $F = \\dfrac{100}{\\sqrt{3}}\\text{ N}$, công $A = F \\cdot s \\cdot \\cos 60^\\circ = \\dfrac{100}{\\sqrt{3}} \\cdot 6 \\cdot 0{,}5 = 100\\sqrt{3}\\text{ J}$."
+    };
+
+    // Chuẩn hóa hoàn hảo câu L3_2 với m = 10 kg, s = 6 m => A = 100\sqrt{3} J:
+    QUESTION_BANK[3][1] = {
+        id: "L3_2",
+        topic: "Kéo vật bằng dây xiên có ma sát trượt",
+        question: "Một kiện hàng khối lượng $m = 10\\text{ kg}$ được kéo chuyển động **thẳng đều** trên mặt sàn ngang bằng lực $\\vec{F}$ hướng chếch lên hợp với phương ngang góc $\\theta = 60^\\circ$. Hệ số ma sát trượt giữa vật và sàn là $\\mu = \\dfrac{1}{\\sqrt{3}}$, lấy $g = 10\\text{ m/s}^2$. Công của lực kéo $\\vec{F}$ khi vật đi được quãng đường $s = 6\\text{ m}$ là:",
+        svg: SVGs.level2Pull60,
+        options: [
+            "$100\\sqrt{3}\\text{ J}$",
+            "$300\\text{ J}$",
+            "$200\\sqrt{3}\\text{ J}$",
+            "$150\\text{ J}$"
+        ],
+        correctIndex: 0,
+        explanation: "Chiếu lên trục đứng và ngang khi vật chuyển động thẳng đều: $N = mg - F\\sin 60^\\circ$ và $F\\cos 60^\\circ = \\mu N = \\mu(mg - F\\sin 60^\\circ)$. Suy ra $F(\\cos 60^\\circ + \\mu\\sin 60^\\circ) = \\mu mg \\Rightarrow F\\left(0{,}5 + \\dfrac{1}{\\sqrt{3}}\\cdot\\dfrac{\\sqrt{3}}{2}\\right) = \\dfrac{100}{\\sqrt{3}} \\Rightarrow F = \\dfrac{100}{\\sqrt{3}}\\text{ N}$. Công của lực kéo: $A = F \\cdot s \\cdot \\cos 60^\\circ = \\dfrac{100}{\\sqrt{3}} \\cdot 6 \\cdot 0{,}5 = 100\\sqrt{3}\\text{ J}$."
+    };
+
+    // ==================== TRẠNG THÁI ỨNG DỤNG & TRỘN ĐỀ NGẪU NHIÊN ====================
+    let currentLevel = 1;
+    let level1PerfectCount = 0;
+    let unlockedLevels = { 1: true, 2: false, 3: false };
+    let activeQuestions = [];
+    let answeredMap = {};
+    let correctCount = 0;
+
+    function shuffleArray(arr) {
+        const copy = [...arr];
+        for (let i = copy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast-msg');
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3200);
+    }
+
+    function updateProgressUI() {
+        for (let i = 1; i <= 3; i++) {
+            const starEl = document.getElementById(`star-${i}`);
+            if (i <= level1PerfectCount) {
+                starEl.classList.add('earned');
+            } else {
+                starEl.classList.remove('earned');
+            }
+        }
+        document.getElementById('pass-text').textContent = `(${level1PerfectCount}/3 lần)`;
+
+        const tab2 = document.getElementById('tab-2');
+        const tab3 = document.getElementById('tab-3');
+
+        if (unlockedLevels[2]) {
+            tab2.classList.remove('locked');
+            tab2.innerHTML = '📗 Cấp độ 2: 7-8 điểm (5 câu)';
+        }
+        if (unlockedLevels[3]) {
+            tab3.classList.remove('locked');
+            tab3.innerHTML = '📕 Cấp độ 3: 9-10 điểm (5 câu)';
+        }
+
+        const total = activeQuestions.length;
+        document.getElementById('score-display').textContent = `Đúng: ${correctCount} / ${total} câu`;
+    }
+
+    function switchLevel(lvl) {
+        if (!unlockedLevels[lvl]) {
+            playFunnySound(false);
+            showToast(`🔒 Hãy hoàn thành đúng 12/12 câu ở Cấp độ 1 đủ 3 lần (hiện tại: ${level1PerfectCount}/3) để mở khóa!`);
+            return;
+        }
+        currentLevel = lvl;
+        document.querySelectorAll('.level-btn').forEach((btn, idx) => {
+            btn.classList.toggle('active', idx + 1 === lvl);
+        });
+        loadLevelQuestions(lvl);
+    }
+
+    function restartCurrentLevel() {
+        loadLevelQuestions(currentLevel);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showToast('🔄 Đã đảo vị trí câu hỏi và đáp án mới!');
+    }
+
+    function teacherUnlockAll() {
+        level1PerfectCount = 3;
+        unlockedLevels[2] = true;
+        unlockedLevels[3] = true;
+        updateProgressUI();
+        showToast('🔓 Đã mở khóa tất cả các cấp độ (Chế độ Giáo viên)!');
+    }
+
+    function loadLevelQuestions(lvl) {
+        answeredMap = {};
+        correctCount = 0;
+
+        // Trộn ngẫu nhiên câu hỏi và trộn vị trí đáp án trong mỗi câu
+        const rawList = QUESTION_BANK[lvl];
+        activeQuestions = shuffleArray(rawList).map(q => {
+            const optionObjects = q.options.map((text, idx) => ({
+                text,
+                isCorrect: idx === q.correctIndex
+            }));
+            const shuffledOptions = shuffleArray(optionObjects);
+            return {
+                ...q,
+                shuffledOptions
+            };
+        });
+
+        renderQuestions();
+        updateProgressUI();
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('quiz-container');
+        container.innerHTML = '';
+
+        const labels = ['A', 'B', 'C', 'D'];
+
+        activeQuestions.forEach((q, qIndex) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${qIndex}`;
+
+            let svgHTML = q.svg ? `<div class="svg-container">${q.svg}</div>` : '';
+
+            let optionsHTML = q.shuffledOptions.map((opt, optIdx) => `
+                <button class="option-btn" id="btn-${qIndex}-${optIdx}" onclick="selectOption(${qIndex}, ${optIdx})">
+                    <span class="option-label">${labels[optIdx]}</span>
+                    <span class="option-content">${opt.text}</span>
+                </button>
+            `).join('');
+
+            card.innerHTML = `
+                <div class="question-header">
+                    <span class="q-badge">Câu ${qIndex + 1} / ${activeQuestions.length}</span>
+                    <span class="q-topic">${q.topic}</span>
+                </div>
+                <div class="q-text">${q.question}</div>
+                ${svgHTML}
+                <div class="options-grid">
+                    ${optionsHTML}
+                </div>
+                <div class="feedback-box" id="feedback-${qIndex}"></div>
+            `;
+
+            container.appendChild(card);
+        });
+
+        // Render công thức toán học bằng KaTeX
+        if (window.renderMathInElement) {
+            renderMathInElement(container, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false }
+                ],
+                throwOnError: false
+            });
+        }
+    }
+
+    function selectOption(qIndex, optIdx) {
+        if (answeredMap[qIndex] !== undefined) return; // Đã chọn rồi thì khóa câu đó
+        answeredMap[qIndex] = optIdx;
+
+        const q = activeQuestions[qIndex];
+        const chosen = q.shuffledOptions[optIdx];
+        const isCorrect = chosen.isCorrect;
+
+        playFunnySound(isCorrect);
+
+        // Tô màu các nút đáp án ngay lập tức
+        q.shuffledOptions.forEach((opt, idx) => {
+            const btn = document.getElementById(`btn-${qIndex}-${idx}`);
+            btn.disabled = true;
+            if (opt.isCorrect) {
+                btn.classList.add('correct');
+            } else if (idx === optIdx && !isCorrect) {
+                btn.classList.add('wrong');
+            }
+        });
+
+        // Hiển thị giải thích chi tiết ngay lập tức
+        const fb = document.getElementById(`feedback-${qIndex}`);
+        if (isCorrect) {
+            correctCount++;
+            fb.className = 'feedback-box show correct';
+            fb.innerHTML = `<strong>🎉 Chính xác! Tuyệt vời!</strong><br>${q.explanation}`;
+        } else {
+            fb.className = 'feedback-box show wrong';
+            fb.innerHTML = `<strong>😮 Chưa đúng rồi! Hãy ghi nhớ nhé:</strong><br>${q.explanation}`;
+        }
+
+        if (window.renderMathInElement) {
+            renderMathInElement(fb, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false }
+                ],
+                throwOnError: false
+            });
+        }
+
+        updateProgressUI();
+        checkLevelCompletion();
+    }
+
+    function checkLevelCompletion() {
+        const total = activeQuestions.length;
+        const answeredCount = Object.keys(answeredMap).length;
+
+        if (answeredCount === total) {
+            if (currentLevel === 1) {
+                if (correctCount === total) {
+                    level1PerfectCount = Math.min(3, level1PerfectCount + 1);
+                    if (level1PerfectCount >= 3) {
+                        unlockedLevels[2] = true;
+                        unlockedLevels[3] = true;
+                        updateProgressUI();
+                        showToast('🏆 Chúc mừng! Em đã hoàn thành 12/12 câu Cấp độ 1 đủ 3 lần. Đã MỞ KHÓA Cấp độ 2 & 3!');
+                    } else {
+                        updateProgressUI();
+                        showToast(`🌟 Xuất sắc đạt 12/12! Tiến độ: ${level1PerfectCount}/3 lần. Hãy bấm "Đảo đề & Làm lại" thêm ${3 - level1PerfectCount} lần nữa để mở khóa Cấp 2 & 3!`);
+                    }
+                } else {
+                    showToast(`💡 Em đạt ${correctCount}/12 câu. Cần đúng cả 12/12 câu mới được tính 1 lần tích lũy. Hãy bấm "Đảo đề & Làm lại" nhé!`);
+                }
+            } else {
+                showToast(`🎯 Hoàn thành Cấp độ ${currentLevel}! Kết quả: ${correctCount}/${total} câu đúng.`);
+            }
+        }
+    }
+
+    // Khởi chạy ứng dụng khi tải xong
+    window.addEventListener('DOMContentLoaded', () => {
+        loadLevelQuestions(1);
+        // Đảm bảo KaTeX render lại sau khi script tải xong
+        setTimeout(() => {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false }
+                    ],
+                    throwOnError: false
+                });
+            }
+        }, 300);
+    });
+</script>
+</body>
+</html>
